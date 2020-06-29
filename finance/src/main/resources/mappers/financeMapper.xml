@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.finance.persistence.FinanceDAO">
+	<insert id="addData">
+		<if test="type == 'kospi'">
+			INSERT INTO tbl_kospi(time, price)
+		</if>
+		<if test="type == 'kosdaq'">
+			INSERT INTO tbl_kosdaq(time, price)
+		</if>
+		<if test="type == 'fut'">
+			INSERT INTO tbl_fut(time, price)
+		</if>
+		VALUES(#{time},#{price})
+	</insert>
+	<select id="selectList" resultType="FinanceDTO">
+		SELECT DISTINCT i.time, i.price i_price, q.price q_price, t.price t_price 
+		FROM tbl_kospi i, tbl_kosdaq q, tbl_fut t
+		WHERE i.time = q.time AND i.time = t.time 
+		ORDER BY i.time
+	</select>
+</mapper>
